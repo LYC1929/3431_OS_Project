@@ -2,3 +2,16 @@
 ===============
 
 CSCI 3431 Project: Creating A Shell 
+
+This is the reporsitory for our CSCI 3134 project. Our group members are :
+
+    Tsubasa Hirooka (Pipe)
+    Lianzhu Shi
+    Yucheng Liu
+    Yiying Zhang
+
+In this projcet we want to implement a simpe shell which has basically 4 functions.
+    1. History
+    2. Pipe 
+    3. Tab Completion Function
+    4. Database
