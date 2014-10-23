@@ -130,10 +130,6 @@ int size(Queue_t *queue) { return queue->size; }
 /* determine if the queue is empty */
 int isEmpty(Queue_t *queue) { return (queue->size == 0); }
 
-int main()
-{
-	return 0;
-}
 
 
 
