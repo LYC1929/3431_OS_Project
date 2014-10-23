@@ -46,5 +46,12 @@ TBA
 
 Data Structure
 ---------
+- Queue:
+  - For more information, please refer to [Queue.md] [1]
+
 
 TBA
+
+
+
+[1]: Queue.md
