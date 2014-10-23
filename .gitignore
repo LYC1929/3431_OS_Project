@@ -1,3 +1,5 @@
 */**/.swp
 */**/.DStore
 .DStore
+*/**/*.dSYM
+*.dSYM
