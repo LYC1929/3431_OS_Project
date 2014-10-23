@@ -5,8 +5,8 @@ Accessing the inside of the queue
   where the position was found using `next`
 
 The function use a "context" parameter to let the queue.c
-functions remember where they are within the queue.  `next`
-changes the context variable while `List_remove_in_context`.
+functions remember where they are within the queue. `next`
+changes the context variable.
 
 To iterate through the linked queue, begin with the context as a
 NULL value.  Sample iteration code is:
