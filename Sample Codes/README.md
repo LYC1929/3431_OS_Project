@@ -14,7 +14,7 @@ Sample codes
 
 - `popen1.c`: Execute `ls` command in another process
 
--`popen2.c`: Execute `sort` command in another process
+- `popen2.c`: Execute `sort` command in another process
 	1. create a file with words
 	2. open a pipe and sort the words in the file
 	3. get rid of the file now that it's done
