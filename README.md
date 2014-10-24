@@ -5,6 +5,8 @@ CSCI 3431 Project: Creating A Shell
 
 This is the reporsitory for our CSCI 3134 project.
 
+The header files are all in the headers folder, all other header files in other folders are symbolic links.
+
 ***
 
 Group Members
