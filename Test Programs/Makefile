@@ -1,16 +1,21 @@
 CC = gcc
 CFLAGS = -g -Wall -o
-EXECS = exec
+EXECS1 = execKey
+EXECS2 = execDB
 DLFLAGS = -lncurses
-FILES = *.c
+DLFLAGS2 = `mysql_config --cflags --libs`
 
-all: compile clean
+all: keypress database clean
 
-compile: $(FILES)
-	$(CC) $(CFLAGS) $(EXECS) $(FILE) $(LDFLAGS)
+keypress: keypress.c
+	$(CC) $(CFLAGS) $(EXECS1) keypress.c $(DLFLAGS)
+
+database: Database_Integration.c
+	$(CC) $(CFLAGS) $(EXECS2) Database_INtegration.c $(DLFLAGS2)
 
 clean:
 	-rm -rf *.dSYM
 
 spotless:
-	-rm $(EXECS)
+	-rm $(EXECS1)
+	-rm $(EXECS2)
