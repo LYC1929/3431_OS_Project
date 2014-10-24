@@ -1,5 +1,6 @@
-*/**/.swp
+*/**/*.swp
 */**/.DStore
 .DStore
 */**/*.dSYM
 *.dSYM
+*.swp
