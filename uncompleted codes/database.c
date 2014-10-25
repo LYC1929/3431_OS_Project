@@ -3,7 +3,6 @@
 #include <unistd.h>
 #include <my_global.h>
 #include <mysql.h>
-#include "common.h"
 #define MAXCRS 7
 #define MAXLEN 20
 #define MAXQUERY 1024

@@ -6,7 +6,7 @@ FILE = *.c
 
 all: compile clean
 
-compile: $(FILE)
+compile: yiying_shell.c Queue.c
 	$(CC) $(CFLAGS) $(EXECS) $(FILE) $(LDFLAGS)
 
 clean: 
