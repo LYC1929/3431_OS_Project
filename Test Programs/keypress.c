@@ -4,7 +4,8 @@
 
 int main()
 {
-
+	int count=0;
+	char *str="";
 	initscr();
 	raw();
 	keypad(stdscr, TRUE);
@@ -17,14 +18,17 @@ int main()
 	{
 		
 		char ch=getc(stdin);
-		if (ch == '\t')
+		if (ch == '\t')		//if detect a tab
 			printw("\nYou entered a tab\n");
 
-		else if (ch == '\n'){
+		else if (ch == '\r'){	//if detect an enter
 			printw("\n$ ");
 		}
-		else if (ch == 'q')
+		else if (ch == 'q')	//if want to quit
 			break;
+		else if (ch == 127){	//if detect a backspace
+			/* deal with delete */
+		}
 		else
 			printw("%c", ch);
 		refresh();	
