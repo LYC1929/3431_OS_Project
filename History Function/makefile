@@ -3,6 +3,8 @@
 
 CCFLAGS = -g -Wall
 
+all: simulate clean
+
 simulate: list.o history.o main.o 
 	gcc $(CCFLAGS) -o simulate list.o history.o main.o
 
@@ -16,5 +18,4 @@ main.o: main.c
 	gcc $(CCFLAGS) -c main.c
 	
 clean:
-	-rm list.o history.o main.o simulate
-
+	rm *.o 
