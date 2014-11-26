@@ -3,6 +3,10 @@ GS_Shell Folder
 
 This folder contains a c program, which implement all the three functions: history, pipeline, and tab completion.
 
+The redirection function is still building.
+
+There is a ppt used for presentation.
+
 ***
 
 Compile
