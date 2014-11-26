@@ -5,8 +5,16 @@ This folder contains a c program, which implement all the three functions: histo
 
 ***
 
-Run the Shell
+Compile
 -------
 
 - type the following command:
   `gcc -o GS_Shell GS_Shell.c -lreadline`
+
+***
+
+Usage
+-------
+
+- run the shell:
+  `./GS_Shell`
