@@ -3,10 +3,17 @@
 #include <signal.h>
 #include <unistd.h>
 #include <string.h>
+#include <pwd.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 
 #define BUFSIZE 100
+#define MAX_PROMPT 1024
+
+const int max_name_len = 256;
+const int max_path_len = 1024;
+
+struct passwd *pwd;
 
 char lastdir[100];
 char history_dir[10][BUFSIZE];
@@ -22,10 +29,6 @@ void init_lastdir()
     getcwd(lastdir, 99);
 }
 
-int print_prompt(void)
-{
-    printf("\n[GS Shell] ^_^ Enter Command: ");
-}
 
 // draw the shell name
 static void drawHs()
@@ -55,36 +58,44 @@ static void drawHs()
 };
 
 
-// history
-static int do_history(char *buf)
+// print prompt
+static char *print_prompt()
 {
-    int i;
-    if(history_count >= 10)
-    {
-        history_count = 0;
-    }
+    char *prompt1[MAX_PROMPT];
+    char *prompt2[MAX_PROMPT];
+    char *prompt3[MAX_PROMPT];
+    char *prompt[MAX_PROMPT];
+    char *line = NULL;
+    char hostname[max_name_len];
+    char pathname[max_path_len];
+    char length;
     
-    memset(&history_dir[history_count][BUFSIZE], 0, BUFSIZE);
-    memcpy(&history_dir[history_count][BUFSIZE], buf,  BUFSIZE);
-    history_count++;
+    pwd = getpwuid(getuid());
+    getcwd(pathname,max_path_len);
     
-    if(strcmp("history", buf) == 0 || strcmp("history ", buf) == 0)
-    {
-        for( i = 1; i < 10; i++)
-        {
-            if(history_dir[i][0] == '\0')
-            {
-                break;
-            }
-            printf("%s\n", history_dir[i]);
-        }
-    }
+    if(gethostname(hostname,max_name_len)==0)
+        sprintf(prompt1, "\n[GS Shell]%s@%s:", pwd->pw_name, hostname);
     else
-    {
-        return -1;
-    }
+        sprintf(prompt1, "\n[GS Shell]%s@unknown:", pwd->pw_name);
     
-    return 0;
+    if(strlen(pathname) < strlen(pwd->pw_dir) || strncmp(pathname, pwd->pw_dir, strlen(pwd->pw_dir)) != 0)
+        sprintf(prompt2, "%s", pathname);
+    else
+        sprintf(prompt2, "~%s", pathname+strlen(pwd->pw_dir));
+    
+    if(geteuid()==0)
+        sprintf(prompt3,"# ");
+    else
+        sprintf(prompt3,"$ ");
+    
+    prompt[0]=0;
+    strcat(prompt, prompt1);
+    strcat(prompt, prompt2);
+    strcat(prompt, prompt3);
+    
+    line = readline(prompt);
+    
+    return line;
 }
 
 
@@ -174,15 +185,6 @@ static void do_list_cmd(const char *buf,const int len)
 
 
 // tab completion
-static char *do_tab()
-{
-    char *line = NULL;
-    line = readline("\n[GS Shell] ^_^ Enter Command: ");
-    
-    return line;
-}
-
-
 char* cmd[] = {"cd", "clear", "help", "history", "ls", "mkdir", "pwd", "quit", "rm", "rmdir", "stat", "time", "vim"};
 
 static char** gs_completion(const char * text, int start, int end)
@@ -194,7 +196,7 @@ static char** gs_completion(const char * text, int start, int end)
     if (start == 0)
         matches = rl_completion_matches((char*)text, &gs_generator);
     else
-        rl_bind_key('\t', rl_insert);
+        rl_bind_key('\t', rl_insert);   // disable the default TAB behavior
     
     return (matches);
     
@@ -244,36 +246,76 @@ void * xmalloc (int size)
 }
 
 
+// history
+static int do_history(char *buf)
+{
+    int i;
+    if(history_count >= 10)
+    {
+        history_count = 0;
+    }
+    
+    memset(&history_dir[history_count][BUFSIZE], 0, BUFSIZE);
+    memcpy(&history_dir[history_count][BUFSIZE], buf,  BUFSIZE);
+    history_count++;
+    
+    if(strcmp("history", buf) == 0 || strcmp("history ", buf) == 0)
+    {
+        for( i = 1; i < 10; i++)
+        {
+            if(history_dir[i][0] == '\0')
+            {
+                break;
+            }
+            printf("%s\n", history_dir[i]);
+        }
+    }
+    else
+    {
+        return -1;
+    }
+    
+    return 0;
+}
+
+
 // main
-int main(int argc, char** argv)
+int main(int argc, char** argv, char** envp)
 {
     drawHs();
     
     int len;
     char ch;
     char *line = NULL;
-	
+    
     signal(SIGINT, SIG_IGN);
 
     init_lastdir();
     
    	rl_attempted_completion_function = gs_completion;
-	while(1) 
+    
+	while(1)
 	{
-		// enable auto-complete
-        rl_bind_key('\t', rl_complete);
 		char buf[BUFSIZE] = {0};
 
-		line = do_tab();
+		line = print_prompt();
+        
 		len = 0;
 	    memcpy(buf, line , BUFSIZE);
+        
+        for (int i=0; i<strlen(buf); i++)
+            buf[i]=tolower(buf[i]);
+        
 		len = strlen(buf);
 		if(len >= BUFSIZE)
         {
 			printf("command is too long\n");
 			break;
 		}
-    
+
+        // enable auto-complete
+        rl_bind_key('\t', rl_complete);
+        
 		if(strcmp("quit", buf) == 0)
 			break;
         else if(strcmp("quit ", buf) == 0)
@@ -285,7 +327,7 @@ int main(int argc, char** argv)
 		    do_list_cmd(buf,len + 1);
         }
         
-        if (buf[0] != 0)
+        if (*buf)
             add_history(buf);
 	}
     
