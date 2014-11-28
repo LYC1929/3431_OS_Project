@@ -316,10 +316,11 @@ int main(int argc, char** argv, char** envp)
         // enable auto-complete
         rl_bind_key('\t', rl_complete);
         
-		if(strcmp("quit", buf) == 0)
-			break;
-        else if(strcmp("quit ", buf) == 0)
+        if(strcmp("quit", buf) == 0 || strcmp("quit ", buf) == 0)
+        {
+            printf("logout\n\n");
             break;
+        }
 
         if(0 == do_history(buf));
         else
