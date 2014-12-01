@@ -122,7 +122,7 @@ History_Add(char* inputbuffer)
 	  command = (command_info *) malloc( sizeof( command_info ) );
 	  if (command != NULL) {
 	    strncpy( command->name, inputbuffer, BUF_MAX-1 );
-	    command->name[BUF_MAX] = '\0'; /* Make sure that it is null-terminated. */
+	    command->name[BUF_MAX-1] = '\0'; /* Make sure that it is null-terminated. */
 	    printf ("Read and stored command, %s\n", command->name);
 
 		//[ADD] functionality
